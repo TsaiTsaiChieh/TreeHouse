@@ -59,16 +59,21 @@ button {
 button + button {
   margin-left: .5em;
 }
-p + button {
+
+/* p + button { */
+  .list li .up {
   background: #52bab3;
 }
 .list button + button {
   background: #768da3;
 }
-.list li button + button {
+ /* .list li button + button {  */
+.list li .down {
   background: #508abc;
 }
+
 li button:first-child {
+
   margin-left: auto;
   background: #52bab3;
 }
