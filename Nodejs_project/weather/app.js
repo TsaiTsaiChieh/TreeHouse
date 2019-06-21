@@ -1,6 +1,7 @@
 const weather = require('./weather');
-
-// const city = 'Beverly Hills';
+// query = London''
+// query = 'Beverly Hills';
+// query = 'Beverly_Hills';
 const query = process.argv.slice(2).join('_').replace('_', ' ');
 weather.get(query);
 
