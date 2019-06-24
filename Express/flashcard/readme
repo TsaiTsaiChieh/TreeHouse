@@ -85,3 +85,14 @@ The Static Server just sends them straight to the client.
 
 The name Public is commonly used for the folder containing static assets.
 Inside Public there's a folder called stylesheets which holds my CSS.
+
+Express cannot read and execute client-side JavaScript.
+Where are static assets executed? The client executes them.
+
+folder rule:
+public- store static assets, like js, stylesheets, img and so on.
+routes- place the router
+views- place the pug file
+data- place the json file
+node_modules- store the middleware that we use
+root- app.js, like index and package seting file
