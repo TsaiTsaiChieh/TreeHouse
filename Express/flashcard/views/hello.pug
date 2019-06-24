@@ -1,0 +1,14 @@
+extends layout.pug
+block content
+    form(action="/hello", method="post")
+        label Please enter your name:
+        input(type="text", name="username")
+        button(type="submit") Submit
+    //- if name
+    //-     h2 Welcome, #{name}!
+    //- else 
+        
+
+        //- action attribute is the route that the browser will send from data to
+        //- method attribute is the HTTP verb that we want to use
+        

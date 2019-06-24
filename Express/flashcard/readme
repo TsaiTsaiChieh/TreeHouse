@@ -1,0 +1,87 @@
+install Express command:
+npm install express@4.15.2 --save
+in js code:
+const express = require('express');
+const app = express();
+
+https://github.com/expressjs/body-parser
+install the middleware called for by docs
+It's called body parser and it will process the incoming form submission data into a format that's easy to read
+HTML form encode the data they send the same way URLs do
+install commands: 
+npm install body-parser --save
+
+in js code:
+const body_parser = require('body-parser');
+// Need to use the urlencode parser, pass in an object, turing off the parser's extended option
+app.use(body_parser.urlencoded({ extended: false }));
+/hello Challenge
+-Add /hello Route
+-Add a hello template
+-Serve Template from /hello
+
+HTTP protocol is stateless (Servers don't remember what client made requests and what was requested)
+A cookie is a piece of data that the service stores on the client
+install cookie-parser
+install commands:
+npm install cookie-parse --save
+in js code:
+const cookie_parser = require('cookie-parser');
+app.use(cookie_parser());
+Warning:It's best not to store sensitive data (password or credit card information) in cookie because they're in plain text. 
+
+Redirects are often used to make the same work page available from several URLs. 
+
+
+How to use middleware?
+in Express.js code:
+app.use((req, res, next)=>{
+    next(); // app is waiting indefinitely for next() to be call right here.
+});
+End middleware by either calling the next or sending a respone(like res.render)
+function middleware() {
+    return funtion(req, res, next) {
+        // middleware logic
+    }
+}
+middleware() // => fucntion
+
+* When an app gets a request, it will go from one app.use call to the next looking for a match.
+If it gets to the end without finding a route and there are no errors, 
+Express' native handler will send a 404 back to the client with some plain text. 
+
+export module method:
+1. In folder (routes), create a js file (index.js):
+    const express  = require('express');
+    const router = express.Router();
+finally, type "module.exports = router;"
+2. In app.js file:
+    const router = require('./routes'); // folder name, default file is index.js
+    app.use(router);
+
+Using Data and Route Parameters
+const { data } = require('../data/flashcardData.json');
+router.get('/:id', (req, res) => {
+    res.render('card', {
+        prompt: cards[req.params.id].question,
+        hint: cards[req.params.id].hint
+    });
+
+A query string goes at the end of a URL and it starts with a question mark
+Beginning of a query string symbol is: ? (question mark)
+/cards/4?key=value&key2=value2
+id is 4, key is side, value is question or answer: /cards/4?side=question
+
+The CSS and client-side JavaScript files will always be the same,
+Express doesn't need to build them, like it does the HTML in our application.
+For this reason, these files are called static assets.
+We've been writing our Express application in JavaScript.
+This is different from the client-side JavaScript our web page might use.
+Our Express app and our browser app are two different environments and play different roles in what the end-user sees.
+
+Express uses something called a Static Server. Because these files are prebuilt and 
+won't change on the server, passing them through all of Express's routing and template rendering would be a waste of time.
+The Static Server just sends them straight to the client.
+
+The name Public is commonly used for the folder containing static assets.
+Inside Public there's a folder called stylesheets which holds my CSS.
