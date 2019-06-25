@@ -1,0 +1,88 @@
+AJAX gives us another faster and more user-friendly way to update our web pages.
+Instead of jumping to a new web page every time we want new information, AJAX lets you build you web 
+pages that ask for information from a web server.
+Another reason why AJAX requests can make your pages feel fast and responsive.
+------------------------------------------------------------------------------------------------------
+Asynchronous requests are sent without waiting. The user can keep mousing around the webpage.
+Your JavaScript program will keep running and only when the response comes back from web server will 
+your program do something with it.
+The X in AJAX stands for XML or Extensible Markup Language or XMLHttpRequest Object.
+Can break the AJAX programming process into four steps:
+1. create an XMLHTTP Request object.
+    - This step tells the web browser to get ready. send an AJAX request and the web browser needs to 
+    create an object that has all the methods you'll need to send and receive data.
+2. define a callback function.
+    - This is the programming you want to run when the server returns its response. The callback is 
+    where you process the returned data and update the HTML on the page.
+3. open a request.
+    - you give the browser two pieces of information, the method the browser will use to send the 
+    request, usually either get or post, and the URL where the request is sent.
+4. send the request.
+    - The last step is finally sending off the request. The previous three steps gave the web browser 
+    all the information it needs so we can finally send off the request to the web server.
+Asynchronous requests mean that the browser can continue working on other tasks until the response 
+returns from the server. JavaScript programs wait for the server response before continuing.
+------------------------------------------------------------------------------------------------------
+1. create an XMLHTTP Request object. The new xml http request part. Tells the web browser to get ready 
+to work with ajax. For each ajax request, you should create a new XHR object. For example, if you 
+wanted to use ajax twice on a page, to request data for a sidebar, and another to process a form 
+submission for example. You will need two variables, each with their own XHR object.
+    var xhr = new XMLHttpRequest();
+2. create a callback function. This programming sets up a function that runs each time there is a 
+change in the state of the Ajax request. Each step in the Ajax process, like opening a new request or 
+sending out that request triggers a change of state. For this call-back function we're only interested 
+in the final change of state. That's when the server sends back its response. We want to get that 
+response and then update our webpage.
+When the ready state is equal to 4. That means we've got the response back. We'll take the full AJAX 
+response and place it into the web page.
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            document.getElementById('ajax').innerHTML = xhr.responseText;
+        }
+        };
+Remember the programming doesn't run until the response comes back from the server.
+3. open a request. This function prepares the browser for sending the request. You give the function 
+two pieces of information. The first is the HTTP method that you're going to use. The second is the 
+URL is where the request is going. This could point to a file or a server-side program on your web 
+server.
+    xhr.open('GET', 'sidebar.html');
+4. send the request.
+    xhr.send();
+------------------------------------------------------------------------------------------------------
+Like search results, new HTML to add to a page, photos from a photo service and so on; use get. Use 
+post if you're sending information that's to be stored in a database, if the data is sensitive, like a
+password, or if you're sending lots of information from a form.
+POST sends its data in the "body" of the request. GET sends data in the URL.
+------------------------------------------------------------------------------------------------------
+In general, you can use AJAX to communicate from one page to another on the same web server, but not 
+to access other web servers. You have AJAX code on a page located at www.myserver.com. You can use 
+AJAX to talk to a PHP file on that server. You can also talk to files on the same server within 
+subfolders.
+Requesting data from another website, if it's not the same server, then it's not from the same origin 
+and it's forbidden. Switching protocols, like Switching from HTTP to HTTPS isn't allowed. Switching 
+from the default port of 80 to port 8888 is a no-no. Switching hosts, an AJAX request from a page 
+located at www.myserver.com can't talk to db.mysurvey.com. Even though the two share the same domain, 
+myserver.com, they're different hosts, www and db.
+This limitation shouldn't cause you any trouble when you simply want to make your web pages feel 
+more responsive and load new information from your own site. First, you can create a web proxy. Web 
+servers aren't limited by the same origin policy. So a web server can request data from servers at 
+other domains. Because of this, you can set up a script in PHP or using Ruby on Rails on your server, 
+which asks for information from another web server. Then you can use AJAX to talk to the script on 
+your site, which talks to the other site, and returns the data to your page. Two, another common 
+technique uses something called JSONP, which stands for JSON with Padding. It's not traditional AJAX,
+it actually relies on the ability to link to JavaScript files across domains. Browsers actually do 
+allow many types of cross domain links. For example, you can link to photos, CSS or JavaScript files 
+on other websites. In fact, linking to JavaScript files across domains is a common technique when 
+working with popular JavaScript libraries like jQuery. In fact, this is how CDNs, or Content Delivery 
+Networks, work. A CDN hosts files that other sites can use. Google, for example, hosts many different 
+JavaScript libraries like the popular jQuery library. You can link to Google's CDN to download jQuery 
+instead of putting the jQuery JavaScript file on your own server, which would waste disk space and
+your server's processing power. Finally, there's a new method for making AJAX requests across domains.
+It's called CORS or Cross-Origin Resource Sharing. It's a W3C recommendation, and is already 
+implemented in most current browsers. It does require some setup on the server's part, but allows a 
+server to accept requests from other domains. It even allows for more complex types of authentication 
+that require the web browser to supply credentials before the web server will provide any information.
+Why is a web proxy useful for AJAX requests? It allows you to bypass a web browser's same-origin 
+policy by retrieving data from another server, while keeping AJAX requests within the same domain.
+------------------------------------------------------------------------------------------------------
+JSON properties name must be quoted using double quotes. Like this: "course": "AJAX Basics"
