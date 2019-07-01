@@ -1,38 +1,298 @@
-install Express command:
-npm install express@4.15.2 --save
-in js code:
-const express = require('express');
-const app = express();
-
-https://github.com/expressjs/body-parser
-install the middleware called for by docs
-It's called body parser and it will process the incoming form submission data into a format that's easy to read
-HTML form encode the data they send the same way URLs do
-install commands: 
-npm install body-parser --save
-
-in js code:
-const body_parser = require('body-parser');
-// Need to use the urlencode parser, pass in an object, turing off the parser's extended option
-app.use(body_parser.urlencoded({ extended: false }));
-/hello Challenge
--Add /hello Route
--Add a hello template
--Serve Template from /hello
-
+|Getting Started with Express|
+To initialize a Node application command:
+    npm init -y.
+The -y just accepts all the default options.
+Install Express command:
+    npm install express@4.15.2 --save
+In order to use Express, we must add it using Nodes require statement. It can use the variable express 
+to access all the methods and properties of the Express module.
+in js code in app.js:
+    const express = require('express');
+Let's assign the Express application to a new variable called, app. We'll extend it throughout this 
+course by adding routes, middleware, and other settings.
+    const app = express();
+Express sets up its server, a server is a program that runs on a remote computer. The first thing 
+we're going to do is setup the development server using the listen method. Give this one parameter 
+which is the port number 3000. The listen method can take the callback function a parameter.
+    app.listen(3000, ()=> {
+        console.log('App is running on localhost: 3000 by Tsai');
+    });
+And it can see an error message from Express, the error is coming from the fact that I have not told 
+Express how to respond to any requests yet.
+From a user's perspective, a route is just like a URL. A route also called an end point, is a command 
+to run a specific function. Which in turn sends a response back to the client.
+Get is known as an HTTP verb, because it represents what the client wants the sub to do. The URL tells 
+the server what to get for the client. Get request are the most common requests made by browsers, and
+a server responds to a get request by sending information off in a web page. But a browser can also 
+send information to the server, for example, when submitting a for to order something online this is 
+called a post request.
+To create a route, I will use the get method on the app object. We're going to create a route for the 
+root route for our app. The get method is used to handle the get requests to a certain URL. This is 
+the route to follow if a visitor just visits our site without specifying a particular folder or file.
+The first parameter is sometimes called the location parameter. The second parameter of the get method
+is going to be an anonymous callback function. This function is going to take two parameters, a 
+request object and a response object. This callback will run when the client requests this route.
+    app.get('/', (req, res) => {
+    });
+*If first parameter just contain a slash, it means the index.js.
+Use the response's send method. The send method sends a string to the client. (Inside the get method):
+    res.send('The string u want to display');
+You do not restart the server everytime you made a chage to your code when install the nodemon, 
+command: install -g nodemon
+When the error "address already in use :::3000" occured, hit the command:
+lsof -i:3000
+kill -9 PID
+Note: when run the nodemon, if you want to using app.js become the default main file, you should open
+the package.json (produced by node init command), modify the index.js file name to app.js, otherwise, 
+nodemon can not find the module, because the default is index.js.
+You can see we're getting some text with an h1 tag, like this:
+    res.send('<h1>The string u want to display</h1>');
+------------------------------------------------------------------------------------------------------
+|Using Templates with Express|
+A template provides the basic HTML for your app and serves it to the users. Templates also lets you 
+vary the output to provide customized responses. Because rendering a template results in what the 
+viewer sees on their screens, templates are often called views. The most popular template in languages 
+for JavaScript developers are Handlebars, EJS, which standards for embedded JavaScript, and Pug(Jade).
+Pug is a language that compiles or translates to HTML. Instead of using HTML opening and closing tags 
+to describe elements, you just type the tag name a space, and then the content that you want to appear 
+inside that tag. For example:
+    h1 I love Tresshouse!
+    ul
+        li Red
+        li Yello
+        li Blue
+    .wrapper
+        p#mainContent Hi!
+Install the Pug command:
+npm install pug --save
+Tell Express to use Pug by opening up the app.js file and then using the app.set method to set the 
+view engine to the parameter pug.
+    app.set('view engine', 'pug');
+By default, Express will look in a folder called views in the root of your project. 
+You can see the package .json file that Pug had been added. If you want to name your folder something 
+else, or nest it into another folder, you'll need to define the view setting and point Express to the 
+right place. Create the "views" folder that we ask express to render a template response, it will 
+grab the template from here. And index.pug. This is the template that will render when the user visits 
+the root URL.
+For the render method, I can enter the name of my Pug template as a parameter, index.
+router.get('/', (req, res) => {
+    res.render('index');
+});
+Here's how you render a variable in Pug.
+    h2= variable
+And using app.render method, The second parameter is called locals. Locals is the name for variables 
+we want the view to have access to when it's being rendered.
+    res.render('card', { name:"Amy" });
+The another way to create the same local variable is like that:
+    res.locals.name = "Amy";
+    res.render('card');
+If we wanted to use some other static text plus a variable inside we can use interpolation similar to 
+the way that you can use template literals in JavaScript. 
+    h1 My name is #{name}
+Note that interpolation doesn't work for attributes though. You'll need to concatenate strings with 
+any values you want to put into attributes, or use template literals.
+    h1(title='My name is '+ name) #{name}
+We can use logic in Pug like this:
+    if hint
+        p
+            i Hint: #{hint}
+    else
+        p (There is no hint.)
+Let's look how Pug handles looping or iterating through an array of values. First, in the app.js file,
+create a list of colors, like this:
+    const colors = [
+        'red', 
+        'blue', 
+        'green'
+    ];
+And in the Pug file, create a UL element. Nested inside, I'll type each, which is a Pug keyword to 
+indicate a lib is starting, type color in colors:
+    ul
+        each color in colors
+            li= color
+Let's create a template called layout.pug. The layout should include everything that our templates 
+have in common. Like the doctype, the head tag, and the body. can copy that into the layout file.
+    html(lang="en")
+        head
+            title My websit
+        body
+            header
+                h1 My websit
+            block main
+            footer
+                p An app to help you study
+The final thing I need in my layout is the "block" main keywords. This lets Pug know that any template 
+extending the layout can inject its HTML there.
+Now in the child template, need two final things. First, need to tell the template that it extends or 
+inherits from the layout file. Do this by using the extends keyword, and then the path to the file. 
+Secondly, need to tell the template to inject the content in the content block. using the block main 
+keywords.
+    extends layout
+    block main
+The layout.pug can be broken up further into what are known as "includes". For example, the header 
+element could go into its own include as well as the footer. For real world applications, headers and 
+footers can get really complicated, having it broken up ahead of time can help you keep it organized 
+and make maintaining it easier. By creating a folder in the views directory and call it includes, 
+create a file named header.pug. Cut the header and footer element out of the layout file and paste 
+it into the header.pug and footer.pug file. Back where I cut out in the layout file, use the "include".
+In includes/header.pug file:
+    header
+        h1 My websit
+In includes/footer.pug file:
+    footer
+        p An app to help you study
+In layout.pug file:
+    html(lang="en")
+        head
+            title My websit
+        body
+            include includes/header.pug
+            block main
+            include includes/footer.pug
+------------------------------------------------------------------------------------------------------
+|Deeper into Routing with Express|
+A GET request simply asks for data, like a web page from a server. But when a client sends data to the 
+server it's called a POST request. Build an HTML form that makes a POST request.
+In pug file add a form tag, the form tag requires an action and method attribute. The action attribute 
+the route that the browser will send form data to. The method is the HTTP verb that we want to use.
+Make a label and then type, please enter your name. Then nested in the label element, output a text 
+input element, add a name attribute, the name attribute is vital to ensure that our app can read the 
+form submission, finally we need a submit button, put the text Submit, into the button.
+    form(action='/hello', method='POST')
+        label Please enter your name:
+            input(type='text', name='username')
+        button(type='submit') Submit
+Now we want to handle the submission of the form. Notice though, that by default it is undefined.
+https://expressjs.com/zh-tw/api.html#req.body
+To put the form responses into the body, we'll need what is called Middleware. Middleware is 
+basically some code that fits in the middle of a request or a response.
+The body property is our form response will end up. It can use cosole.dir(req) in app.post method to 
+look too closely at the request. It has a lot of information, we don't need many of these properties.
+And use cosole.dir(req.body), the cosole show undefined. It should install the body-parser 
+middleware. It will process the incoming form submission data into a format that's easy to read HTML 
+form encode the data they send.
+install commands:     
+    npm install body-parser --save
+Tell Express to use it, in js code:
+    const body_parser = require('body-parser');
+// Need to use the urlencode parser, pass in an object, turing off the parser's extended option.
+    app.use(body_parser.urlencoded({ extended: false }));
+And finally the cosole will show the user typing in the input text field like { username: 'Amy' }
+There's also another method that's commonly used to send back data to the client, JSON. I don't get 
+an HTML page at all, just get the JSON string like this:
+    app.post('/hello', (req, res) => {
+        res.json(req.body);
+    });
+The app.post method can pass in the name to the render method.
+    app.post('/hello', (req, res) => {
+        res.render('/hello', { name: req.body.username });
+    });
+Then, in hello.pug file:
+    if name
+        h2 Welcome, #{name}
+    else
+        // code like form
 HTTP protocol is stateless (Servers don't remember what client made requests and what was requested)
-A cookie is a piece of data that the service stores on the client
-install cookie-parser
-install commands:
-npm install cookie-parse --save
-in js code:
-const cookie_parser = require('cookie-parser');
-app.use(cookie_parser());
-Warning:It's best not to store sensitive data (password or credit card information) in cookie because they're in plain text. 
-
-Redirects are often used to make the same work page available from several URLs. 
-
-
+A cookie is a piece of data that the service stores on the client. Consider a web form, as you fill 
+it out, you set the text, check boxes, and other inputs to hold information. The information you 
+enter is the state of the form. Probably have the experience of setting the state of a form of filling 
+it out and accidentally refreshing the page or hitting the back button. The form will be clear when 
+it reappears and you have to fill it in all over again. That's because forms don't retain the state 
+between refreshes, or at least by default. Clients and servers have stateless interactions. This 
+means a client has to send complete information to the server every time it makes a request.
+Tracking state often takes a lot of architecture and memory. One of the earliest and still most common 
+methods for saving states on the web is a cookie. A cookie is a piece of data that the service stores 
+on the client. In your web browser, after receiving the cookie information from the server, when the 
+client makes another request of the server, the client sends the cookie information too. It will even 
+send other cookies that have been previously set perhaps by other web pages on that site. This way, 
+the client can remind the server of any information it should hand back in its response.
+Cookie 預設在每次網站送出 Request 的時候，就會被跟著夾帶到 Server，而 Server 回傳 Response 的時候，也會把 Cookie
+一起帶下來到瀏覽器端
+They are stored in your browser by domain. We can use the cookie method on Express's response object.
+https://expressjs.com/zh-tw/api.html#res.cookie
+The cookie method takes a name and a value. Can also pass in an options object as a third parameter.
+Let's set the cookie when the user submits the form to the post route. We'll call the name, the string 
+of username.
+    app.post('/hello', (req, res) => {
+            res.cookie('username', req.body.username);
+            res.render('/hello', { name: req.body.username });
+        });
+Now the browser will automatically send this cookie with every request it makes. At this point though, 
+our app isn't reading the cookie it's getting back. 
+In the application tab, on the left-hand side, we have Cookies. We can see if the cookie is set. 
+Let's read the cookie and share the user's name when the user makes a get request to this route.
+https://expressjs.com/zh-tw/api.html#req.cookies
+Looking at the documentation, we'll need middleware that reads the cookies, called cookie-parser.
+install cookie-parser commands:
+    npm install cookie-parser --save
+In app.js code:
+    const cookie_parser = require('cookie-parser');
+    app.use(cookie_parser());
+Now down in the get hello route, we can provide it to the template as a variable. We're going to read 
+it out of the cookie we've just set.
+    app.get('/hello', (req, res) => {
+        res.render('hello', { name: req.cookie.username });
+    });
+It's one of the simpler ways that are available to developers. Databases and other different browser 
+storage called session storage are examples of other commonly used ways to save state.
+Warning: it's best not to store sensitive data (password or credit card information) in cookie because 
+they're in plain text. 
+Redirecting after a form submission prevents duplicate submissions if a user refreshes the page.
+Redirects are often used to make the same work page available from several URLs. So, what is 
+redirecting? In terms of HTTP, it represents a series of specific events. When a client request of 
+resource from a server that is protected or perhaps is being moved, the server will often respond with 
+the response call that redirect which contains a URL.
+If you type in gogle.com, for example, you are instantly redirected to Google's home page. Google 
+bought the domain name to help its users find their page even if they mistype it.
+After users enter their name, let's redirect them to our app's main welcome page.
+https://expressjs.com/zh-tw/api.html#res.redirect
+    app.post('/hello', (req, res) => {
+                res.cookie('username', req.body.username);
+                res.render('/');
+            });
+In the hello template, I can just remove this conditional altogether. No one will ever land on this 
+page unless the app doesn't know their name. Go to index.pug and replace the generic greeting with 
+our personalized one. And also go back to the app.js code, cut the locals name
+res.render('/hello', { name: req.cookies.username }) in app.get('/hello') function. And paste it in 
+the home route like this: (Because both the key and the value have the same name, I can use the ES6 
+object shorthand to remove the usage of the colon and the extra name.)
+    app.get('/', (req, res) => {
+        const name = req.cookies.username;
+        res.render('/', { name });
+    });
+How to redirect users to the hello page if the cookie's username key isn't set? 
+    app.get('/', (req, res) => {
+        const name = req.cookies.username;
+        if (name) {
+            res.render('/', { name });
+        } else {
+            res.redirect('/hello');
+        }
+        
+    });
+Add similar logic to the hello route? We want to redirect the user to the index page if the cookies 
+username value is set. Otherwise, we went to render the hello form. 
+    app.get('/hello', (req, res) => {
+        const name = req.cookies.username;
+        if (name) {
+            res.redirect('/');
+        } else {
+            res.render('/hello');
+        }
+        
+    });
+But still we don't have an easy way to unset the cookie value without going to DevTools and doing it 
+manually. Is to implement a goodbye button for the app. At the index.pug file:
+    h2 Welcome, #{name}!
+    form(action='/goodbye', method='POST')
+        button(type='submit') Goodbye
+In app.js I added a new post route under the hello post route called goodbye. I use the clear cookie 
+method to remove the cookie's username value, then I redirected to the hello route.
+    app.post('/goodbye', (req, res) => {
+        res.clearCookie('username');
+        res.redirect('/hello');
+    });
+------------------------------------------------------------------------------------------------------
 How to use middleware?
 in Express.js code:
 app.use((req, res, next)=>{
@@ -96,3 +356,6 @@ views- place the pug file
 data- place the json file
 node_modules- store the middleware that we use
 root- app.js, like index and package seting file
+|Middleware|
+|Parameters, Query Strings, and Modularizing Routes|
+|Serving Static Files in Express|
