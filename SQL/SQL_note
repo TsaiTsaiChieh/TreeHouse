@@ -1,0 +1,64 @@
+|Getting Data from a Database|
+A query we can use to retrieve all data from any table. This can be useful for small data sets. The 
+star character(*), means you want to bring all of the information in all of the tables, columns back. 
+    SELECT * FROM <table name>
+Retrieving a single column:
+    SELECT <column name> FROM <table name>;
+Retrieving multiple columns:
+    SELECT <column name 1>, <column name 2>, ... FROM <table name>;
+When you bring back data with a new label using the as keyword it does not change the name of the 
+column in the actual database.
+    SELECT <column name> AS <alias> FROM <table name>;
+    SELECT <column name> <alias> FROM <table name>;
+The keyword can be used in lowercase, but some people use uppercase keywords to distinguish the 
+different paths of the query.
+------------------------------------------------------------------------------------------------------
+|Finding the Data You Want|
+Find all rows that a given value matches a column's value.
+    SELECT <columns> FROM <table> WHERE <column name> = <value>;
+Ｅxamples:
+    SELECT * FROM contacts WHERE first_name = "Andrew";
+    SELECT first_name, email FROM users WHERE last_name = "Chalkley";
+    SELECT name AS "Product Name" FROM products WHERE stock_count = 0;
+    SELECT title "Book Title" FROM books WHERE year_published = 1999;
+Find all rows that a given value doesn't match a column's value.
+    SELECT <columns> FROM <table> WHERE <column name> != <value>;
+    SELECT <columns> FROM <table> WHERE <column name> <> <value>;
+You can compare multiple values in a WHERE condition. If you want to test that both conditions are true 
+use the AND keyword, or either conditions are true use the OR keyword.
+    SELECT <columns> FROM <table> WHERE <condition 1> AND <condition 2> ...;
+    ECT <columns> FROM <table> WHERE <condition 1> OR <condition 2> ...;
+These are primarily used to compare numeric and date/time types.
+    SELECT <columns> FROM <table> WHERE <column name> <= <value>;
+    SELECT <columns> FROM <table> WHERE <column name> > <value>;
+Searching Within a Set of Values:
+    SELECT <columns> FROM <table> WHERE <column> IN (<value 1>, <value 2>, ...);
+Examples:
+    SELECT name FROM islands WHERE id IN (4, 8, 15, 16, 23, 42);
+    SELECT * FROM products WHERE category IN ("eBooks", "Books", "Comics");
+    SELECT title FROM courses WHERE topic IN ("JavaScript", "Databases", "CSS");
+    SELECT * FROM campaigns WHERE medium IN ("email", "blog", "ppc");
+To find all rows that are not in the set of values you can use NOT IN.
+    SELECT <columns> FROM <table> WHERE <column>  NOT IN (<value 1>, <value 2>, ...);
+Searching Within a Range of Values
+    SELECT <columns> FROM <table> WHERE <column> BETWEEN <lesser value> AND <greater value>;
+Examples:
+    SELECT * FROM movies WHERE release_year BETWEEN 2000 AND 2010;
+    SELECT name, description FROM products WHERE price BETWEEN 9.99 AND 19.99;
+    SELECT name, appointment_date FROM appointments WHERE appointment_date BETWEEN "2015-01-01" AND 
+    "2015-01-07";
+Finding Data that Matches a Pattern. Placing the percent symbol (%) any where in a string in 
+conjunction with the LIKE keyword will operate as a wildcard. Meaning it can be substituted by any 
+number of characters, including zero! LIKE in PostgreSQL is case-sensitive. To case-insensitive 
+searches do LIKE.
+    SELECT <columns> FROM <table> WHERE <column> LIKE <pattern>;
+Examples:
+    SELECT title FROM books WHERE title LIKE "Harry Potter%Fire";
+    SELECT title FROM movies WHERE title LIKE "Alien%";
+    SELECT * FROM contacts WHERE first_name LIKE "%drew";
+    SELECT * FROM books WHERE title LIKE "%Brief History%";
+It can be handy to retrieve rows with or without information missing.
+    SELECT <columns> FROM <table> WHERE <column> IS NULL;
+To filter out missing values you can use IS NOT NULL.
+    SELECT <columns> FROM <table> WHERE <column> IS NOT NULL;
+------------------------------------------------------------------------------------------------------
